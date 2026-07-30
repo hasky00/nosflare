@@ -39,6 +39,7 @@ export interface RelayInfo {
     subscription?: Array<{ amount: number; unit: string; period: number }>;
     publication?: Array<{ kinds: number[]; amount: number; unit: string }>;
   };
+  [key: string]: any;
 }
 
 export interface Subscription {

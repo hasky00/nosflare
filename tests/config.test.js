@@ -95,3 +95,27 @@ test('relay info requires contact and supported NIPs', () => {
     assert.match(messages, /supported_nips must include/);
   }
 });
+
+test('relay info preserves optional NIP-11 metadata fields', () => {
+  const validConfig = getConfigSnapshot();
+  validConfig.relayInfo = {
+    ...validConfig.relayInfo,
+    banner: 'https://example.com/banner.jpg',
+    relay_countries: ['US', 'CA'],
+    language_tags: ['en', 'en-419'],
+    tags: ['bitcoin-only', 'sfw-only'],
+    retention: [{ kinds: [1], time: 3600 }],
+    posting_policy: 'https://example.com/posting-policy.html',
+  };
+
+  const result = ConfigSchema.safeParse(validConfig);
+  assert.equal(result.success, true, 'expected relay info metadata to validate');
+  if (result.success) {
+    assert.equal(result.data.relayInfo.banner, 'https://example.com/banner.jpg');
+    assert.deepEqual(result.data.relayInfo.relay_countries, ['US', 'CA']);
+    assert.deepEqual(result.data.relayInfo.language_tags, ['en', 'en-419']);
+    assert.deepEqual(result.data.relayInfo.tags, ['bitcoin-only', 'sfw-only']);
+    assert.deepEqual(result.data.relayInfo.retention, [{ kinds: [1], time: 3600 }]);
+    assert.equal(result.data.relayInfo.posting_policy, 'https://example.com/posting-policy.html');
+  }
+});

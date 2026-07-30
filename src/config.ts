@@ -232,7 +232,7 @@ const relayInfoSchema = z.object({
         .optional(),
     })
     .optional(),
-});
+}).passthrough();
 
 const rateLimiterSchema = z.object({
   rate: z.number().nonnegative(),
